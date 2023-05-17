@@ -14,6 +14,14 @@ def is_iso_date(date_str):
         return False
 
 
+def is_string_number(string):
+    try:
+        float(string)
+        return True
+    except ValueError:
+        return False
+
+
 def mongo_query(q):
     query_object = parse_qs(q, keep_blank_values=True)
     output_dict = {}
@@ -30,6 +38,10 @@ def mongo_query(q):
     query_array = []
 
     for key, value in output_dict.items():
+        if (is_iso_date(value)):
+            value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%fZ")
+        if (is_string_number(value)):
+            value = int(value)
         if key == 's':
             query_array.append({'$text': {'$search': value}})
         elif isinstance(value, list):
@@ -78,6 +90,7 @@ def mongo_query(q):
     return query
 
 
-query_string = 'schedule.start_at^=2023-05-09T15:30:00.000Z&schedule.end_atv=2023-05-09T15:30:00.000Z'
+query_string = 'schedule.start_at^=2023-05-09T15:30:00.000Z&schedule.end_atv=2023-05-09T15:30:00.000Z&schedule.medium_at=2023-05-09T15:30:00.000Z&number=1'
 query = mongo_query(query_string)
-print(query) ## {'schedule.start_at': {'$gte': '2023-05-09T15:30:00.000Z'}, 'schedule.end_at': {'$lte': '2023-05-09T15:30:00.000Z'}}
+# {'schedule.start_at': {'$gte': '2023-05-09T15:30:00.000Z'}, 'schedule.end_at': {'$lte': '2023-05-09T15:30:00.000Z'}}
+print(query)
