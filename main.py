@@ -55,6 +55,16 @@ def mongo_query(q):
                     '!*', ''): {'$all': [{'$elemMatch': {'$ne': val}} for val in values]}})
             else:
                 query_array.append({key.replace('*', ''): {'$all': values}})
+        elif '^' in key:
+            if '!' in key:
+                query_array.append({key.replace('!^', ''): {'$lte': value}})
+            else:
+                query_array.append({key.replace('^', ''): {'$gte': value}})
+        elif 'v' in key:
+            if '!' in key:
+                query_array.append({key.replace('!v', ''): {'$gte': value}})
+            else:
+                query_array.append({key.replace('v', ''): {'$lte': value}})
         elif '!' in key:
             query_array.append(
                 {key.replace('!', ''): {'$ne': None if value == 'null' else value}})
@@ -68,6 +78,6 @@ def mongo_query(q):
     return query
 
 
-query_string = 'status=1&date[]=2023-05-09T15:30:00.000Z&date[]=2023-05-09T15:30:00.000Z'
+query_string = 'schedule.start_at^=2023-05-09T15:30:00.000Z&schedule.end_atv=2023-05-09T15:30:00.000Z'
 query = mongo_query(query_string)
-print(query) ## {'status': '1', 'date': {'$gte': datetime.datetime(2023, 5, 9, 15, 30), '$lte': datetime.datetime(2023, 5, 9, 15, 30)}}
+print(query) ## {'schedule.start_at': {'$gte': '2023-05-09T15:30:00.000Z'}, 'schedule.end_at': {'$lte': '2023-05-09T15:30:00.000Z'}}
