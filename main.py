@@ -41,6 +41,7 @@ def mongo_query(q):
         if (is_iso_date(value)):
             value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%fZ")
         if (is_string_number(value)):
+            print(value)
             value = int(value)
         if key == 's':
             query_array.append({'$text': {'$search': value}})
