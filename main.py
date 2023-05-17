@@ -18,7 +18,7 @@ def is_string_number(string):
     try:
         float(string)
         return True
-    except ValueError:
+    except (ValueError, TypeError):
         return False
 
 
