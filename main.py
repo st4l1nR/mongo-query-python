@@ -91,7 +91,7 @@ def mongo_query(q):
     return query
 
 
-query_string = 'schedule.start_at^=2023-05-09T15:30:00.000Z&schedule.end_atv=2023-05-09T15:30:00.000Z&schedule.medium_at=2023-05-09T15:30:00.000Z&number=1'
+query_string = 's=A text search&total=1&name!=banned&price[]=10&price[]=50&schedule.start_at^=2023-05-09T15:30:00.000Z&schedule.end_atv=2023-05-09T15:30:00.000Z&schedule.medium_at=2023-05-09T15:30:00.000Z'
 query = mongo_query(query_string)
-# {'schedule.start_at': {'$gte': '2023-05-09T15:30:00.000Z'}, 'schedule.end_at': {'$lte': '2023-05-09T15:30:00.000Z'}}
-print(query)
+print(query) # {'schedule.start_at': {'$gte': datetime.datetime(2023, 5, 9, 15, 30)}, 'schedule.end_at': {'$lte': datetime.datetime(2023, 5, 9, 15, 30)}, 'schedule.medium_at': datetime.datetime(2023, 5, 9, 15, 30), 'number': 1}
+
